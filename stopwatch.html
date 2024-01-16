@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  <title>Stopwatch</title>
+  <style>
+   
+
+  
+
+                    
+                
+
+
+body {
+  font-family: "Lucida Handwriting", cursive;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: darken;
+}
+
+
+#stopwatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 10vh auto;
+  background: transparent;
+}
+
+
+
+    button {
+      display: inline-block;
+      outline: none;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 500px;
+      transition-property: background-color,border-color,color,box-shadow,filter;
+      transition-duration: .3s;
+      border: 1px solid transparent;
+      letter-spacing: 2px;
+      min-width: 160px;
+      text-transform: uppercase;
+      white-space: normal;
+      font-weight: 700;
+      text-align: center;
+      padding: 17px 48px;
+      color: #fff;
+      background-color: #063014;
+      height: 48px;
+
+    }
+    button:hover{
+    transform: scale(1.04);
+    background-color: #11391f;
+    }
+
+    #display {
+      font-size: 2em;
+    }
+
+    #lap-times {
+      margin-top: 20px;
+      text-align: center;
+      
+    }
+
+    #lap-times ul {
+      list-style: none;
+      padding: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: medium ;
+      font-size: 25px;
+    }
+
+    #lap-times li {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <div id="stopwatch">
+  <img src="icon.png" width="100px" height="100px" style="position:absolute;right: 862px;width: 72px;height: 58px;
+  padding-top: 10px;padding-right: 10px;">   <h1>Stopwatch</h1>
+<br>
+    <div>
+      <span id="display">00:00:00</span>
+    </div>
+    <div>
+      <br>
+      <button onclick="startStop()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+    <div id="lap-times">
+      <h2>Lap Times</h2>
+      <ul id="lap-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    let startTime, elapsedTime, running, interval;
+    const display = document.getElementById('display');
+    const lapList = document.getElementById('lap-list');
+
+    function startStop() {
+      if (!running) {
+        start();
+      } else {
+        stop();
+      }
+    }
+
+    function start() {
+      startTime = Date.now() - (elapsedTime || 0);
+      interval = setInterval(updateDisplay, 10);
+      running = true;
+    }
+
+    function stop() {
+      clearInterval(interval);
+      running = false;
+    }
+
+    function pause() {
+      if (running) {
+        stop();
+        displayLapTime();
+      }
+    }
+
+    function reset() {
+      stop();
+      startTime = Date.now();
+      elapsedTime = 0;
+      updateDisplay();
+      clearLapTimes();
+    }
+
+    function updateDisplay() {
+      const now = Date.now();
+      elapsedTime = now - startTime;
+      display.textContent = formatTime(elapsedTime);
+    }
+
+    function formatTime(time) {
+      const date = new Date(time);
+      const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+      const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+      const milliseconds = Math.floor(date.getUTCMilliseconds() / 10).toString().padStart(2, '0');
+      return `${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    function displayLapTime() {
+      const lapTime = formatTime(elapsedTime);
+      const lapItem = document.createElement('li');
+      lapItem.textContent = lapTime;
+      lapList.appendChild(lapItem);
+    }
+
+    function clearLapTimes() {
+      lapList.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
+
+
